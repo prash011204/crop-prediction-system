@@ -1,6 +1,9 @@
 flask
 numpy
-pandas
 scikit-learn
+pandas
 matplotlib
 requests
+python-dotenv
+flask-limiter
+gunicorn
