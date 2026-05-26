@@ -15,6 +15,32 @@
 
         <h3>Feature Importance</h3>
         <img src="data:image/png;base64,{{ plot_url }}" alt="Feature Importance Graph">
+        <form action="/download_report" method="POST">
+
+            <input type="hidden" name="crop" value="{{ crop }}">
+
+            <input type="hidden" name="accuracy" value="{{ accuracy }}">
+
+            <input type="hidden" name="temperature" value="{{ request.form.temperature }}">
+
+            <input type="hidden" name="humidity" value="{{ request.form.humidity }}">
+
+            <input type="hidden" name="ph" value="{{ request.form.ph }}">
+
+            <input type="hidden" name="rainfall" value="{{ request.form.rainfall }}">
+
+            <input type="hidden" name="Nvalue" value="{{ request.form.Nvalue }}">
+
+            <input type="hidden" name="Pvalue" value="{{ request.form.Pvalue }}">
+
+            <input type="hidden" name="Kvalue" value="{{ request.form.Kvalue }}">
+
+            <button type="submit">
+                Download Report
+            </button>
+
+        </form>
+
     </div>
 
     <h2>🌤 Weather Forecast</h2>

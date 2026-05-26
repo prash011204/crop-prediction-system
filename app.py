@@ -1,3 +1,21 @@
+from flask import send_file
+
+from datetime import datetime
+
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle
+)
+
+from reportlab.lib import colors
+
+from reportlab.lib.pagesizes import letter
+
+from reportlab.lib.styles import getSampleStyleSheet
+
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -260,6 +278,285 @@ def update_weather():
         'weather_partial.html',
         weather_data=weather_data
     )
+
+# ----------------------
+# Download PDF Report
+# ----------------------
+@app.route('/download_report', methods=['POST'])
+def download_report():
+
+    try:
+
+        # ----------------------
+        # Get Form Data
+        # ----------------------
+        crop = request.form['crop']
+
+        accuracy_value = request.form['accuracy']
+
+        temperature = request.form['temperature']
+
+        humidity = request.form['humidity']
+
+        ph = request.form['ph']
+
+        rainfall = request.form['rainfall']
+
+        Nvalue = request.form['Nvalue']
+
+        Pvalue = request.form['Pvalue']
+
+        Kvalue = request.form['Kvalue']
+
+        # ----------------------
+        # Create Buffer
+        # ----------------------
+        buffer = io.BytesIO()
+
+        # ----------------------
+        # Create PDF
+        # ----------------------
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=40,
+            leftMargin=40,
+            topMargin=40,
+            bottomMargin=30
+        )
+
+        styles = getSampleStyleSheet()
+
+        elements = []
+
+        # ----------------------
+        # Title
+        # ----------------------
+        title = Paragraph(
+            """
+            <font size=28 color='darkgreen'>
+            <b><u>CROP PREDICTION REPORT</u></b>
+            </font>
+            """,
+            styles['Title']
+        )
+
+        elements.append(title)
+
+        elements.append(Spacer(1, 35))
+
+        # ----------------------
+        # Date
+        # ----------------------
+        now = datetime.now().strftime(
+            "%d %B %Y | %I:%M %p"
+        )
+
+        date_para = Paragraph(
+            f"""
+            <para alignment='right'>
+            <font size=12>
+            <b>Date:</b> {now}
+            </font>
+            </para>
+            """,
+            styles['BodyText']
+        )
+
+        elements.append(date_para)
+
+        elements.append(Spacer(1, 30))
+
+        # ----------------------
+        # Input Section Heading
+        # ----------------------
+        input_heading = Paragraph(
+            "<font size=18 color='darkgreen'><b>INPUT PARAMETERS</b></font>",
+            styles['Heading2']
+        )
+
+        elements.append(input_heading)
+
+        elements.append(Spacer(1, 15))
+
+        # ----------------------
+        # Input Table
+        # ----------------------
+        table_data = [
+
+            ["PARAMETER", "VALUE"],
+
+            ["Temperature", temperature],
+
+            ["Humidity", humidity],
+
+            ["pH", ph],
+
+            ["Rainfall", rainfall],
+
+            ["Nitrogen (N)", Nvalue],
+
+            ["Phosphorus (P)", Pvalue],
+
+            ["Potassium (K)", Kvalue]
+
+        ]
+
+        table = Table(
+            table_data,
+            colWidths=[250, 200]
+        )
+
+        table.setStyle(TableStyle([
+
+            ('BACKGROUND', (0, 0), (-1, 0), colors.darkgreen),
+
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+
+            ('FONTSIZE', (0, 0), (-1, -1), 12),
+
+            ('GRID', (0, 0), (-1, -1), 1.2, colors.black),
+
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+
+            ('TOPPADDING', (0, 0), (-1, 0), 12),
+
+            ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 10),
+
+            ('TOPPADDING', (0, 1), (-1, -1), 10),
+
+            ('LEFTPADDING', (0, 0), (-1, -1), 15),
+
+            ('RIGHTPADDING', (0, 0), (-1, -1), 15)
+
+        ]))
+
+        elements.append(table)
+
+        elements.append(Spacer(1, 35))
+
+        # ----------------------
+        # Prediction Result
+        # ----------------------
+        result_heading = Paragraph(
+            """
+            <font size=18 color='darkgreen'>
+            <b>PREDICTION RESULT</b>
+            </font>
+            """,
+            styles['Heading2']
+        )
+
+        elements.append(result_heading)
+
+        elements.append(Spacer(1, 15))
+
+        result_para = Paragraph(
+            f"""
+            <font size=14>
+            <b>Predicted Crop:</b> {crop}
+            <br/><br/>
+            <b>Model Accuracy:</b> {accuracy_value}%
+            </font>
+            """,
+            styles['BodyText']
+        )
+
+        elements.append(result_para)
+
+        elements.append(Spacer(1, 30))#----------
+
+        # ----------------------
+        # Model Used Section
+        # ----------------------
+        model_heading = Paragraph(
+            """
+            <font size=18 color='darkgreen'>
+            <b>MODEL USED</b>
+            </font>
+            """,
+            styles['Heading2']
+        )
+
+        elements.append(model_heading)
+
+        elements.append(Spacer(1, 12))
+
+        model_para = Paragraph(
+            """
+            <font size=14>
+            Random Forest Classifier
+            </font>
+            """,
+            styles['BodyText']
+        )
+
+        elements.append(model_para)
+
+        elements.append(Spacer(1, 40))#--------
+
+        footer_para = Paragraph(
+            """
+            <para alignment='center'>
+            <font size=10 color='grey'>
+            This report is generated using Machine Learning based
+            crop prediction system developed for educational purposes.
+            </font>
+            </para>
+            """,
+            styles['BodyText']
+        )
+
+        elements.append(footer_para)
+
+        # ----------------------
+        # Build PDF
+        # ----------------------
+        # ----------------------
+        # Border Function
+        # ----------------------
+        def add_page_border(canvas, doc):
+
+            canvas.saveState()
+
+            canvas.setStrokeColor(colors.darkgreen)
+
+            canvas.setLineWidth(3)
+
+            canvas.rect(
+                20,
+                20,
+                letter[0] - 40,
+                letter[1] - 40
+            )
+
+            canvas.restoreState()
+
+        # ----------------------
+        # Build PDF
+        # ----------------------
+        doc.build(
+            elements,
+            onFirstPage=add_page_border,
+            onLaterPages=add_page_border
+        )
+
+        buffer.seek(0)
+
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name="Crop_Report.pdf",
+            mimetype='application/pdf'
+        )
+
+    except Exception as e:
+
+        return f"Error generating PDF: {str(e)}"
 
 # ----------------------
 # Run App
