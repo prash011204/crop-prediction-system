@@ -1,6 +1,7 @@
 from flask import send_file
 
 from datetime import datetime
+import pytz
 
 from reportlab.platypus import (
     SimpleDocTemplate,
@@ -346,11 +347,13 @@ def download_report():
         elements.append(Spacer(1, 35))
 
         # ----------------------
-        # Date
+        # Date & Time (IST)
         # ----------------------
-        now = datetime.now().strftime(
-            "%d %B %Y | %I:%M %p"
-        )
+        india_timezone = pytz.timezone('Asia/Kolkata')
+
+        now = datetime.now(india_timezone).strftime(
+            "%d %B %Y | %I:%M %p IST"
+        ).lstrip("0")
 
         date_para = Paragraph(
             f"""
