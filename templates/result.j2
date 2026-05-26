@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Recommendation Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>🌱 Recommended Crop</h1>
+
+    <div class="info-container">
+        <p><b>Crop ID:</b> {{ crop_id }}</p>
+        <p><b>Crop Name:</b> {{ crop }}</p>
+        <p><b>Model Accuracy:</b> {{ accuracy }} %</p>
+
+        <h3>Feature Importance</h3>
+        <img src="data:image/png;base64,{{ plot_url }}" alt="Feature Importance Graph">
+    </div>
+
+    <h2>🌤 Weather Forecast</h2>
+
+    <div class="weather-row">
+        <label for="state-select">State:</label>
+        <select id="state-select">
+            {% for state in states_list %}
+            <option value="{{ state }}">{{ state }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="district-select">District:</label>
+        <select id="district-select"></select>
+
+        <button id="update-weather">Get Weather</button>
+    </div>
+
+    <!-- Weather Info -->
+    <div id="weather-info">
+        {% include 'weather_partial.html' %}
+    </div>
+
+    <br>
+    <a href="/">🔙 Go Back</a>
+
+    <div class="disclaimer">
+    ⚠ This project is developed for educational purposes only.
+    Crop predictions are generated using a machine learning model
+    and should not be considered as professional agricultural advice.
+    </div>
+
+<script>
+(() => {
+    const districts_json = {{ districts_json|tojson|safe }};
+    const stateSelect = document.getElementById('state-select');
+    const districtSelect = document.getElementById('district-select');
+
+    function updateDistrictDropdown() {
+        const selectedState = stateSelect.value;
+        const districts = districts_json.districts.filter(d => d.state === selectedState);
+        districtSelect.innerHTML = '';
+        districts.forEach(d => {
+            const option = document.createElement('option');
+            option.value = d.district;
+            option.text = d.district;
+            districtSelect.appendChild(option);
+        });
+    }
+
+    stateSelect.addEventListener('change', updateDistrictDropdown);
+    window.onload = updateDistrictDropdown;
+
+    $('#update-weather').click(function() {
+        $.post("/update_weather", {
+            state: $('#state-select').val(),
+            district: $('#district-select').val()
+        }, function(data) {
+            $('#weather-info').html(data);
+        });
+    });
+})();
+</script>
+</body>
+</html>

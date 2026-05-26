@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+
+<body style="font-family: Arial; text-align: center;">
+    <h1>🌱 Crop Recommendation System</h1>
+
+   <form action="/predict" method="post">
+    <h3>Crop Parameters</h3>
+    <div class="form-grid">
+        <!-- Row 1: 4 fields -->
+        <div>
+            <label>Temperature (°C):</label>
+            <input type="number" name="temperature" step="0.01" required>
+        </div>
+        <div>
+            <label>Humidity (%):</label>
+            <input type="number" name="humidity" step="0.01" required>
+        </div>
+        <div>
+            <label>pH:</label>
+            <input type="number" name="ph" step="0.01" required>
+        </div>
+        <div>
+            <label>Rainfall (mm):</label>
+            <input type="number" name="rainfall" step="0.01" required>
+        </div>
+
+        <!-- Row 2: 3 fields + button -->
+        <div class="row2">
+            <div>
+                <label>N-value:</label>
+                <input type="number" name="Nvalue" required>
+            </div>
+            <div>
+                <label>P-value:</label>
+                <input type="number" name="Pvalue" required>
+            </div>
+            <div>
+                <label>K-value:</label>
+                <input type="number" name="Kvalue" required>
+            </div>
+            <button type="submit">Get Recommendation</button>
+        </div>
+    </div>
+</form>
+
+
+
+</body>
+</html>

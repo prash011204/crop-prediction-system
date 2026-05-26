@@ -1,0 +1,123 @@
+/* ===== General Body ===== */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f0f8ff, #e0ffff);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ===== Heading ===== */
+h1 {
+    margin-top: 40px;
+    font-size: 3em;
+    color: #2e8b57;
+    text-shadow: 1px 1px 2px #ccc;
+    text-align: center;
+    animation: fadeInDown 1s ease;
+}
+
+/* ===== Form Container ===== */
+form {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 850px;
+    width: 90%;
+    margin-top: 50px; /* Gap between heading and grid */
+}
+
+/* ===== Subheading ===== */
+h3 {
+    color: #3b5998;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease;
+}
+
+/* ===== Form Grid ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for first row */
+    gap: 20px;
+    justify-items: center; /* center content in grid */
+}
+
+/* Row 2 customization (3 fields + button) */
+.form-grid .row2 {
+    grid-column: span 4;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 3 fields + button */
+    gap: 20px;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+/* ===== Labels & Inputs ===== */
+label {
+    font-weight: 500;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 0.95em;
+    transition: 0.3s;
+}
+
+input[type="number"]:focus {
+    border-color: #2e8b57;
+    box-shadow: 0 0 5px rgba(46, 139, 87, 0.3);
+    outline: none;
+}
+
+/* ===== Button Styling ===== */
+button {
+    background-color: #2e8b57;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    padding: 10px 0;
+    width: 100%;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #3cb371;
+    transform: translateY(-2px);
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInDown {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* ===== Footer / Go Back Link Styling ===== */
+a {
+    color: #2e8b57;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #3cb371;
+    text-shadow: 0 0 3px rgba(0,0,0,0.2);
+}

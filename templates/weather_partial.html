@@ -1,0 +1,10 @@
+{% if weather_data.error %}
+    <p>{{ weather_data.error }}</p>
+{% else %}
+    <p><b>Location:</b> {{ weather_data.location }}</p>
+    <p><b>Temperature:</b> {{ weather_data.temperature }} °C</p>
+    <p><b>Humidity:</b> {{ weather_data.humidity }} %</p>
+    <p><b>Pressure:</b> {{ weather_data.pressure }} hPa</p>
+    <p><b>Weather:</b> {{ weather_data.weather }}</p>
+    <p><b>Wind Speed:</b> {{ weather_data.wind_speed }} km/ph</p>
+{% endif %}
