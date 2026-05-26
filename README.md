@@ -166,9 +166,7 @@ Prashant Chandanshive
 
 # ⭐ Future Improvements
 
-- Deployment on cloud platform
 - Better UI/UX
-- Real-time soil sensor integration
 - Multiple ML model comparison
 - Crop yield prediction
 - Fertilizer recommendation system
